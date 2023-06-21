@@ -22,7 +22,7 @@ class Query
   end
   
   def question_to_bytes(question)
-    puts "question.type_: #{question.type_} question.class_: #{question.class_}"
+
     values = [question.type_ , question.class_]
     packed = values.pack('S>*')
     hex_string = packed.unpack('H*').first
@@ -31,32 +31,32 @@ class Query
     return question.name + printable_byte_string
   end
   
-  
-def encode_dns_name(name)
-  encoded_name = ""
-  name.split(".").each do |label|
-    packed_length = [label.length].pack('C')
-    hex_string = packed_length.unpack('H*').first
-    string = hex_string.scan(/../).map {|b| '\x' + b }.join
-    encoded_name += string + label
+  def encode_dns_name(name)
+    encoded_name = ""
+    name.split(".").each do |label|
+      packed_length = [label.length].pack('C')
+      hex_string = packed_length.unpack('H*').first
+      string = hex_string.scan(/../).map {|b| '\x' + b }.join
+      encoded_name += string + label
+    end
+    encoded_name += '\x00'
+
+    return encoded_name
   end
-  encoded_name += '\x00'
-  return encoded_name
-end
 
-def generate_random_id
-  return rand(65535)
-end
+  def generate_random_id
+    return rand(65535)
+  end
 
-def build_query(domain_name, record_type, protocol_class)
-  name = encode_dns_name(domain_name)
-  id = generate_random_id
-  recursion_desired = 1 << 8
-  header = DNSHeader.new(id: id, flags: recursion_desired, num_questions: 1)
-  question = DNSQuestion.new(name: name, type_: record_type, class_: protocol_class)
+  def build_query(domain_name, record_type, protocol_class)
+    name = encode_dns_name(domain_name)
+    id = generate_random_id
+    recursion_desired = 1 << 8
+    header = DNSHeader.new(id: id, flags: recursion_desired, num_questions: 1)
+    question = DNSQuestion.new(name: name, type_: record_type, class_: protocol_class)
 
-  return header_to_bytes(header) + question_to_bytes(question)
-end 
+    return "#{header_to_bytes(header)}#{question_to_bytes(question)}"
+  end 
 
 end
 
