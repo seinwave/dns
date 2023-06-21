@@ -16,7 +16,7 @@ class Query
   def header_to_bytes(header)
     packed = [header.id, header.flags, header.num_questions, header.num_answers, header.num_authorities, header.num_additionals].pack('S>*')
     hex_string = packed.unpack('H*').first
-    printable_byte_string = hex_string.scan(/../).map {|b| '\x' + b }.join
+    printable_byte_string = hex_string.scan(/../).map {|b| "\\x" + b }.join
     
     return printable_byte_string
   end
@@ -26,7 +26,7 @@ class Query
     values = [question.type_ , question.class_]
     packed = values.pack('S>*')
     hex_string = packed.unpack('H*').first
-    printable_byte_string = hex_string.scan(/../).map {|b| '\x' + b }.join
+    printable_byte_string = hex_string.scan(/../).map {|b| "\\x" + b }.join
     
     return question.name + printable_byte_string
   end
@@ -36,10 +36,10 @@ class Query
     name.split(".").each do |label|
       packed_length = [label.length].pack('C')
       hex_string = packed_length.unpack('H*').first
-      string = hex_string.scan(/../).map {|b| '\x' + b }.join
+      string = hex_string.scan(/../).map {|b| "\\x" + b }.join
       encoded_name += string + label
     end
-    encoded_name += '\x00'
+    encoded_name += "\\x00"
 
     return encoded_name
   end
@@ -55,7 +55,10 @@ class Query
     header = DNSHeader.new(id: id, flags: recursion_desired, num_questions: 1)
     question = DNSQuestion.new(name: name, type_: record_type, class_: protocol_class)
 
-    return "#{header_to_bytes(header)}#{question_to_bytes(question)}"
+    header_bytes = header_to_bytes(header)
+    question_bytes = question_to_bytes(question)
+
+    return "#{header_bytes}#{question_bytes}"
   end 
 
 end
