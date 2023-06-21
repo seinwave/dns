@@ -16,14 +16,14 @@ class Query
   def header_to_bytes(header)
     packed = [header.id, header.flags, header.num_questions, header.num_answers, header.num_authorities, header.num_additionals].pack('S>S>S>S>S>S>')
     hex_string = packed.unpack('H*').first
-    printable_byte_string = hex_string.scan(/../).map {|b| "\\x" + b }.join
+    printable_byte_string = hex_string.scan(/../).map {|b| '\x' + b }.join
     return printable_byte_string
   end
   
   def question_to_bytes(question)
     packed = [question.type_ , question.class_].pack('L>')
     hex_string = packed.unpack('H*').first
-    printable_byte_string = hex_string.scan(/../).map {|b| "\\x" + b }.join
+    printable_byte_string = hex_string.scan(/../).map {|b| '\x' + b }.join
     
     return question.name + printable_byte_string
   end
