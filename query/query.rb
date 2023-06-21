@@ -14,15 +14,17 @@ end
 class Query 
 
   def header_to_bytes(header)
-    packed = [header.id, header.flags, header.num_questions, header.num_answers, header.num_authorities, header.num_additionals].pack('S>S>S>S>S>S>')
+    packed = [header.id, header.flags, header.num_questions, header.num_answers, header.num_authorities, header.num_additionals].pack('S>*')
     hex_string = packed.unpack('H*').first
     printable_byte_string = hex_string.scan(/../).map {|b| '\x' + b }.join
+    
     return printable_byte_string
   end
   
   def question_to_bytes(question)
+    puts "question.type_: #{question.type_} question.class_: #{question.class_}"
     values = [question.type_ , question.class_]
-    packed = values.pack('L>')
+    packed = values.pack('S>*')
     hex_string = packed.unpack('H*').first
     printable_byte_string = hex_string.scan(/../).map {|b| '\x' + b }.join
     
