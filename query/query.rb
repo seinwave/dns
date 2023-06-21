@@ -33,6 +33,13 @@ class Query
   
   
   def encode_dns_name(domain_name)
+    encoded_name = ""
+    domain_name.split(".").each do |label|
+      hex_string = '\x0' + label.length.to_s(16)
+      encoded_name += hex_string
+      encoded_name += label
+    end
+    return encoded_name + '\x00'
   end
 
 end 

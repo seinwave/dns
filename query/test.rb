@@ -15,8 +15,12 @@ describe Query do
        
     end
 
-    it "should encode a domain name" do
+    it "should encode a reasonable-length domain name" do
         query = Query.new
         expect(query.encode_dns_name("www.google.com")).to eq('\x03www\x06google\x03com\x00')
+    end
+    it "should encode a non-reasonable-length domain name" do
+        query = Query.new
+        expect(query.encode_dns_name("www.gooasdfasfasfsafasfasdfasfasfsadgle.com")).to eq('\x03www\x06google\x03com\x00')
     end
 end  
