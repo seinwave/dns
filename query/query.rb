@@ -21,7 +21,8 @@ class Query
   end
   
   def question_to_bytes(question)
-    packed = [question.type_ , question.class_].pack('L>')
+    values = [question.type_ , question.class_]
+    packed = values.pack('L>')
     hex_string = packed.unpack('H*').first
     printable_byte_string = hex_string.scan(/../).map {|b| '\x' + b }.join
     
