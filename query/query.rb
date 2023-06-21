@@ -12,11 +12,12 @@ end
 
 
 class Query 
+
   def header_to_bytes(header)
-    packed = header.values.pack('L>')
+    # convert header field values to a byte string
+    packed = [header.id, header.flags, header.num_questions, header.num_answers, header.num_authorities, header.num_additionals].pack('S>S>S>S>S>S>')
     hex_string = packed.unpack('H*').first
     printable_byte_string = hex_string.scan(/../).map {|b| "\\x" + b }.join
-  
     return printable_byte_string
   end
   
