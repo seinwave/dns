@@ -44,8 +44,7 @@ def encode_dns_name(name)
   return encoded_name
 end
 
-
-end 
+end
 
 
 
