@@ -32,15 +32,18 @@ class Query
   end
   
   
-  def encode_dns_name(domain_name)
-    encoded_name = ""
-    domain_name.split(".").each do |label|
-      hex_string = '\x0' + label.length.to_s(16)
-      encoded_name += hex_string
-      encoded_name += label
-    end
-    return encoded_name + '\x00'
+def encode_dns_name(name)
+  encoded_name = ""
+  name.split(".").each do |label|
+    packed_length = [label.length].pack('C')
+    hex_string = packed_length.unpack('H*').first
+    string = hex_string.scan(/../).map {|b| '\x' + b }.join
+    encoded_name += string + label
   end
+  encoded_name += '\x00'
+  return encoded_name
+end
+
 
 end 
 
