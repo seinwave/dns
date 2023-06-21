@@ -44,6 +44,20 @@ def encode_dns_name(name)
   return encoded_name
 end
 
+def generate_random_id
+  return rand(65535)
+end
+
+def build_query(domain_name, record_type, protocol_class)
+  name = encode_dns_name(domain_name)
+  id = generate_random_id
+  recursion_desired = 1 << 8
+  header = DNSHeader.new(id: id, flags: recursion_desired, num_questions: 1)
+  question = DNSQuestion.new(name: name, type_: record_type, class_: protocol_class)
+
+  return header_to_bytes(header) + question_to_bytes(question)
+end 
+
 end
 
 

@@ -27,6 +27,8 @@ describe Query do
 
     it "should build a valid DNS query" do
         query = Query.new
-        expect(query.build_query("www.google.com", 1, 1)).to eq('\x00\x01\x00\x01\x00\x00\x00\x00\x00\x00\x03www\x06google\x03com\x00\x00\x01\x00\x01')
+        # mock the random id
+        allow(query).to receive(:generate_random_id).and_return(15)
+        expect(query.build_query("www.example.com", 1, 1)).to eq('\\x00\\x0f\\x01\\x00\\x00\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x03www\\x07example\\x03com\\x00\\x00\\x01\\x00\\x01')
     end
 end  
