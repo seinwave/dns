@@ -20,8 +20,8 @@ describe Query do
         expect(query.encode_dns_name("www.google.com")).to eq('\x03www\x06google\x03com\x00')
     end
 
-    # it "should encode a non-reasonable-length domain name" do
-    #     query = Query.new
-    #     expect(query.encode_dns_name("www.gooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadgle.com")).to eq('\x03www\x8Cgooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadgle\x03com\\x00')
-    # end
+    it "should encode a non-reasonable-length domain name" do
+        query = Query.new
+        expect(query.encode_dns_name("www.gooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadgle.com")).to eq('\x03www\x8cgooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadglegooasdfasfasfsafasfasdfasfasfsadgle\x03com\\x00')
+    end
 end  
