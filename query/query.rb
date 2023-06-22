@@ -22,7 +22,6 @@ class Query
   end
   
   def question_to_bytes(question)
-
     values = [question.type_ , question.class_]
     packed = values.pack('S>*')
     hex_string = packed.unpack('H*').first
@@ -31,18 +30,15 @@ class Query
     return question.name + printable_byte_string
   end
   
-  def encode_dns_name(name)
-    encoded_name = ""
-    name.split(".").each do |label|
-      packed_length = [label.length].pack('C')
-      hex_string = packed_length.unpack('H*').first
-      string = hex_string.scan(/../).map {|b| "\\x" + b }.join
-      encoded_name += string + label
-    end
-    encoded_name += "\\x00"
-
-    return encoded_name
+  def encode_dns_name(domain_name)
+  encoded_name = ""
+  domain_name.split(".").each do |part|
+    encoded_name += [part.length].pack('C') + part
   end
+
+  return encoded_name + "\x00"
+end
+
 
   def generate_random_id
     return rand(65535)
