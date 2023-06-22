@@ -10,7 +10,7 @@ describe Response do
 
     it "parses a header, and returns a new DNSHeader" do
         @buffer = StringIO.new(@raw_response)
-        expect(@response.parse_header(@buffer)).to eq(DNSHeader.new(1,1,1,0,0))
+        expect(@response.parse_header(@buffer)).to eq(DNSHeader.new(1,33152,1,1,0))
     end
 
 end 
