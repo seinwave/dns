@@ -24,4 +24,11 @@ class Response
     return name
   end
 
+  def parse_question(reader)
+    name = decode_name(reader)
+    data = reader.read(4)
+    type_, class_ = data.unpack("n2")
+    return DNSQuestion.new(name, type_, class_)
+  end
+
 end  
