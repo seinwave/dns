@@ -15,25 +15,21 @@ class Query
 
   def header_to_bytes(header)
     packed = [header.id, header.flags, header.num_questions, header.num_answers, header.num_authorities, header.num_additionals].pack('S>*')
-    hex_string = packed.unpack('H*').first
-    printable_byte_string = hex_string.scan(/../).map {|b| "\\x" + b }.join
-    
-    return printable_byte_string
+
+    return packed
   end
   
   def question_to_bytes(question)
     values = [question.type_ , question.class_]
     packed = values.pack('S>*')
-    hex_string = packed.unpack('H*').first
-    printable_byte_string = hex_string.scan(/../).map {|b| "\\x" + b }.join
-    
-    return question.name + printable_byte_string
+   
+    return question.name + packed
   end
   
   def encode_dns_name(domain_name)
   encoded_name = ""
   domain_name.split(".").each do |part|
-    encoded_name += [part.length].pack('C') + part
+    encoded_name += [part.length].pack('C*') + part
   end
 
   return encoded_name + "\x00"
@@ -54,7 +50,7 @@ end
     header_bytes = header_to_bytes(header)
     question_bytes = question_to_bytes(question)
 
-    return "#{header_bytes}#{question_bytes}"
+    return header_bytes + question_bytes
   end 
 
 end
