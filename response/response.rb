@@ -18,6 +18,14 @@ class Response
   end
 
  
-
+ def decode_name(reader)
+    name = ""
+    loop do
+      length = reader.read(1).unpack("C")[0]
+      break if length == 0
+      name += reader.read(length) + "."
+    end
+    return name
+  end
 
 end  
