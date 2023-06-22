@@ -16,4 +16,8 @@ class Response
       items = reader.read(12).unpack("n5")
       return DNSHeader.new(*items)
   end
+
+ 
+
+
 end  

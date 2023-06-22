@@ -13,4 +13,10 @@ describe Response do
         expect(@response.parse_header(@buffer)).to eq(DNSHeader.new(1,33152,1,1,0))
     end
 
+    it "parses a response, and returns the domain name" do
+        @buffer = StringIO.new(@raw_response)
+        @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
+        expect(@response.decode_name(@buffer)).to eq("www.example.com.")
+    end 
+
 end 
