@@ -17,6 +17,12 @@ describe Response do
         @buffer = StringIO.new(@raw_response)
         @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
         expect(@response.decode_name(@buffer)).to eq("www.example.com.")
-    end 
+    end
+    
+    it "parses the question, and returns a new DNSQuestion" do
+        @buffer = StringIO.new(@raw_response)
+        @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
+        expect(@response.parse_question(@buffer)).to eq(DNSQuestion.new("www.example.com.", 1, 1))
+    end
 
 end 
