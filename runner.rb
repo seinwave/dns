@@ -4,12 +4,7 @@ require 'pry'
 
 q = Query.new
 
-query = q.build_query("www.floogle.com", 1, 1)
-
-
-encoded_query = "\x12\x34\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x03www\x06google\x03com\x00\x00\x01\x00\x01"
-
-my_query = "\xfa\xbf\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x03www\x07floogle\x03com\x00\x00\x01\x00\x01"
+query = q.build_query("www.example.com", 1, 1)
 
 socket = UDPSocket.new
 
