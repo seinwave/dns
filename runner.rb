@@ -22,6 +22,6 @@ reader = StringIO.new(response)
 
 header = r.parse_header(reader)
 
-puts header.inspect
+puts response.inspect
 
 socket.close

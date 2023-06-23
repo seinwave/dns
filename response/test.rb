@@ -5,31 +5,34 @@ describe Response do
 
     before(:each) do
         @response = Response.new
-        @raw_response = "\x00\x01\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xc0\x0c\x00\x01\x00\x01\x00\x00\x00\x00\x00\x04\x00\x04\x7f\x00\x00\x01"
+        @raw_response = "\x13\x14\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xC0\f\x00\x01\x00\x01\x00\x00P[\x00\x04]\xB8\xD8\""
     end
 
     it "parses a header, and returns a new DNSHeader" do
         @buffer = StringIO.new(@raw_response)
-        expect(@response.parse_header(@buffer)).to eq(DNSHeader.new(1,33152,1,1,0))
+        expect(@response.parse_header(@buffer)).to eq(DNSHeader.new(4884,33152,1,1,0))
     end
 
     it "parses a response, and returns the domain name" do
         @buffer = StringIO.new(@raw_response)
         @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
-        expect(@response.decode_name(@buffer)).to eq("www.example.com.")
+        expect(@response.decode_name(@buffer)).to eq("www.example.com")
     end
     
     it "parses the question, and returns a new DNSQuestion" do
         @buffer = StringIO.new(@raw_response)
         @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
-        expect(@response.parse_question(@buffer)).to eq(DNSQuestion.new("www.example.com.", 1, 1))
+        expect(@response.parse_question(@buffer)).to eq(DNSQuestion.new("www.example.com", 1, 1))
     end
 
     it "parses the record, and returns a new DNSRecord" do
         @buffer = StringIO.new(@raw_response)
-        @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
-        @response.parse_question(@buffer) # have to parse the question next, to move the buffer along
-        expect(@response.parse_record(@buffer)).to eq(DNSRecord.new("www.example.com.", 1, 1, 0,))
+        header = @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
+        question = @response.parse_question(@buffer) # have to parse the question next, to move the buffer along 
+        
+        expect(@response.parse_record(@buffer)).to eq(DNSRecord.new("www.example.com", 1, 1, 20571, "]\xB8\xD8\""))
+        
+       
     end 
 
 end 
