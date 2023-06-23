@@ -44,8 +44,8 @@ end
     name = encode_dns_name(domain_name)
     id = generate_random_id
     recursion_desired = 1 << 8
-    header = DNSHeader.new(id: id, flags: recursion_desired, num_questions: 1)
-    question = DNSQuestion.new(name: name, type_: record_type, class_: protocol_class)
+    header = DNSHeader.new(id, recursion_desired,1)
+    question = DNSQuestion.new(name,record_type, protocol_class)
 
     header_bytes = header_to_bytes(header)
     question_bytes = question_to_bytes(question)
