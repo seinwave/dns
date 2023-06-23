@@ -25,4 +25,11 @@ describe Response do
         expect(@response.parse_question(@buffer)).to eq(DNSQuestion.new("www.example.com.", 1, 1))
     end
 
+    it "parses the record, and returns a new DNSRecord" do
+        @buffer = StringIO.new(@raw_response)
+        @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
+        @response.parse_question(@buffer) # have to parse the question next, to move the buffer along
+        expect(@response.parse_record(@buffer)).to eq(DNSRecord.new("www.example.com.", 1, 1, 0,))
+    end 
+
 end 
