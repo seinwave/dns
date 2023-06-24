@@ -19,7 +19,7 @@ class Response
     name = [] 
     loop do
       length = reader.read(1).unpack("C")[0]
-      if (length & 0xC0) == 0xC0 # checking if most significant bits are 11
+      if (length & 0xC0) == 0xC0 # checking if most significant bits are 11 - means we have a compressed name (ie - a reference to the position of the name in the bytestream)
         name.push(decode_compressed_name(length, reader))
         break # a compressed name is never followed by another label
       else 
@@ -32,9 +32,12 @@ class Response
   end
 
   def decode_compressed_name(length, reader)
-    offset_pointer = ((length & 0x3F) << 8) + reader.read(1).unpack("C")[0]
+    last_six_bits_of_length = ((length & 0x3F) << 8)  
+    next_byte_int = reader.read(1).unpack("C")[0]
+    pointer = last_six_bits_of_length + next_byte_int  # pointer is the position of the name in the bytestream
+
     saved_position = reader.pos
-    reader.pos = offset_pointer
+    reader.pos = pointer
     result = decode_name(reader)
     reader.pos = saved_position # restore the reader's original position     
     

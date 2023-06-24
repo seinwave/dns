@@ -29,19 +29,14 @@ describe Response do
         @buffer = StringIO.new(@raw_response)
         header = @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
         question = @response.parse_question(@buffer) # have to parse the question next, to move the buffer along 
-        #todo: diff is empty, but the objects are not equal.  why?
 
         data_string = "]\xB8\xD8\""
         data_string.force_encoding("ASCII-8BIT")
         correct_record = DNSRecord.new("www.example.com", 1, 1, 20571, data_string)
        
-
         parsed_record = @response.parse_record(@buffer)
 
-
-        expect(parsed_record).to eq(correct_record)
-
-             
+        expect(parsed_record).to eq(correct_record)   
     end 
 
 end 
