@@ -69,7 +69,7 @@ class Response
 
     data_length_bytes = reader.read(2) # data length is 2 bytes
     data_length = data_length_bytes.unpack("n")[0] # tells us how many bytes of data to consume
-    data = reader.read(data_length)
+    data = reader.read(data_length) # data is what we're after -- the ip address, or the name server, or the mail server, etc   
 
     return DNSRecord.new(name, type_, class_, ttl, data)
   end
