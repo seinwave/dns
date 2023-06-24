@@ -31,12 +31,20 @@ describe Response do
         question = @response.parse_question(@buffer) # have to parse the question next, to move the buffer along 
 
         data_string = "]\xB8\xD8\""
-        data_string.force_encoding("ASCII-8BIT")
+        data_string.force_encoding("ASCII-8BIT") # need to force encoding because I copy + pasted the string from the raw response
         correct_record = DNSRecord.new("www.example.com", 1, 1, 20571, data_string)
        
         parsed_record = @response.parse_record(@buffer)
 
         expect(parsed_record).to eq(correct_record)   
-    end 
+    end
+    
+    it "parses the response, and returns a complete DNSPacket" do
+        @buffer = StringIO.new(@raw_response)
+        parsed_packet = @response.parse_dns_packet(@buffer)
+
+        expect(parsed_packet.header).to eq(DNSHeader.new(4884,33152,1,1,0))
+       
+    end
 
 end 

@@ -7,6 +7,12 @@ class DNSRecord < Struct.new("DNSRecord", :name, :type_, :class_, :ttl, :data)
   end
 end
 
+class DNSPacket < Struct.new("DNSPacket", :header, :questions, :answers, :authorities, :additionals)
+  def initialize(header, questions, answers, authorities, additionals)
+    super(name, type_, class_, ttl, data)
+  end
+end
+
 class Response 
   def parse_header(reader)
       items = reader.read(12).unpack("n6")
