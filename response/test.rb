@@ -56,7 +56,7 @@ describe Response do
         @buffer = StringIO.new(@raw_response)
         parsed_packet = @response.parse_dns_packet(@buffer)
         ip_address = @response.get_ip_address(parsed_packet)
-        expect(parsed_packet.answers[0].data).to eq('93.184.216.34')
+        expect(ip_address).to eq('93.184.216.34')
     end 
 
 end 

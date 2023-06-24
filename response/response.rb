@@ -102,6 +102,15 @@ class Response
 
   end
 
+  def get_ip_address(packet)
+    raw_data = packet.answers[0].data
+    ip_address = raw_data.unpack("C4")
+
+    ip_string = ip_address.join(".")
+  
+    return ip_string
+  end
+
   
 
 end  
