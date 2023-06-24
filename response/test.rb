@@ -43,7 +43,11 @@ describe Response do
         @buffer = StringIO.new(@raw_response)
         parsed_packet = @response.parse_dns_packet(@buffer)
 
-        expect(parsed_packet.header).to eq(DNSHeader.new(4884,33152,1,1,0))
+        correct_header = DNSHeader.new(4884,33152,1,1,0)
+        correct_record = DNSRecord.new("www.example.com", 1, 1, 20571, "]\xB8\xD8\"")
+        correct_packet = DNSPacket.new(correct_header, DNSQuestion.new("www.example.com", 1, 1), [correct_record],[],[])
+
+        expect(parsed_packet).to eq(correct_packet)
        
     end
 

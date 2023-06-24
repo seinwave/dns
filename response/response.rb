@@ -9,7 +9,7 @@ end
 
 class DNSPacket < Struct.new("DNSPacket", :header, :questions, :answers, :authorities, :additionals)
   def initialize(header, questions, answers, authorities, additionals)
-    super(name, type_, class_, ttl, data)
+    super(header, questions, answers, authorities, additionals)
   end
 end
 
@@ -73,5 +73,35 @@ class Response
 
     return DNSRecord.new(name, type_, class_, ttl, data)
   end
+
+  def parse_dns_packet(reader)
+    header = parse_header(reader)
+    
+    questions = []
+    answers = []
+    authorities = []
+    additionals = []
+
+    header.num_questions.times do
+        questions.push(parse_question(reader))
+    end
+
+    header.num_answers.times do
+        answers.push(parse_record(reader))
+    end
+
+    header.num_authorities.times do
+        authorities.push(parse_record(reader))
+    end
+
+    header.num_additionals.times do
+        additionals.push(parse_record(reader))
+    end 
+
+    return DNSPacket.new(header, questions, answers, authorities, additionals)
+
+  end
+
+  
 
 end  
