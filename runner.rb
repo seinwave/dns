@@ -20,8 +20,8 @@ response, _ = socket.recvfrom(1024)
 
 reader = StringIO.new(response)
 
-header = r.parse_header(reader)
+packet = r.parse_dns_packet(reader)
 
-puts response.inspect
+puts r.get_ip_address(packet)
 
 socket.close
