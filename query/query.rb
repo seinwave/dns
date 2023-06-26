@@ -22,9 +22,6 @@ class Query
   def question_to_bytes(question)
     values = [question.type_ , question.class_]
     packed = values.pack('S>*')
-
-    puts "NAME:", question.name
-   
     return question.name + packed
   end
   
