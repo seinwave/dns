@@ -10,7 +10,7 @@ describe Query do
 
     it  "should convert a question to bytes" do
         query = Query.new
-        question = DNSQuestion.new(name: "www.google.com", type_: 1, class_: 1)
+        question = DNSQuestion.new("www.google.com", 1, 1)
         expect(query.question_to_bytes(question)).to eq("www.google.com\u0000\u0001\u0000\u0001")
     end
 
