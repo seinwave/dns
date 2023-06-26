@@ -1,5 +1,6 @@
 require_relative '../query/query'
 require_relative '../response/response'
+require 'socket'
 require 'stringio'
 
 
@@ -25,6 +26,17 @@ class Resolver
 
     query = header_bytes + question_bytes  
     return query.force_encoding("UTF-8")
+  end 
+
+  def send_query(ip_address, domain_name, record_type, protocol_class)
+    query = build_query(domain_name, record_type, protocol_class)
+
+    socket = UDPSocket.new
+    socket.send(query, 0, ip_address, 53)
+    response, _ = socket.recvfrom(1024)
+
+    return @response.parse_dns_packet(response)
+
   end 
 
 end 
