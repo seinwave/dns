@@ -27,4 +27,18 @@ describe Resolver do
 
        expect(packet).to eq(correct_packet)
     end 
+
+    it "should parse the record, and support TYPE A record types" do
+      @raw_type_a_response = "\x13\x14\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xC0\f\x00\x01\x00\x01\x00\x00P[\x00\x04]\xB8\xD8\"" 
+      @buffer = StringIO.new(@raw_type_a_response)
+      record = @r.parse_record(@buffer)
+
+    end 
+
+    # it "should parse the record, and NS record types" do 
+    #   @raw_type_a_response = ""\x13\x14\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xC0\f\x00\x01\x00\x01\x00\x00P[\x00\x04]\xB8\xD8\"" 
+
+    #   @buffer = StringIO.new(@raw_response)
+    #   record = @r.parse_record(@buffer)
+    # end 
 end  

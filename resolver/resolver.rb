@@ -36,7 +36,6 @@ class Resolver
     response, _ = socket.recvfrom(1024)
 
     return @response.parse_dns_packet(response)
-
   end 
 
 end 
