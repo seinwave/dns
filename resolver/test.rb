@@ -1,10 +1,12 @@
 require 'rspec/autorun'
 require_relative 'resolver'
+require_relative '../response/response'
 
 describe Resolver do
 
     before(:each) do
         @r = Resolver.new
+        @response = Response.new
     end 
  
     it "should build a valid DNS query" do
@@ -31,7 +33,16 @@ describe Resolver do
     it "should parse the record, and support TYPE A record types" do
       @raw_type_a_response = "\x13\x14\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xC0\f\x00\x01\x00\x01\x00\x00P[\x00\x04]\xB8\xD8\"" 
       @buffer = StringIO.new(@raw_type_a_response)
-      record = @r.parse_record(@buffer)
+      header = @response.parse_header(@buffer)  # have to parse the header first to get the buffer pointer in the right position
+      question = @response.parse_question(@buffer) # have to parse the question next, to move the buffer along 
+
+      data_string = "]\xB8\xD8\""
+      data_string.force_encoding("ASCII-8BIT") # need to force encoding because I copy + pasted the string from the raw response
+      correct_record = DNSRecord.new("www.example.com", 1, 1, 20571, data_string)
+       
+      parsed_record = @r.parse_record(@buffer)
+
+      expect(parsed_record).to eq(correct_record)   
 
     end 
 
