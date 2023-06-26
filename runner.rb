@@ -7,6 +7,10 @@ require 'pry'
 q = Query.new
 r = Response.new 
 
+url = ARGV[0]
+
+puts "Fetching ip address for #{url}"
+
 query = q.build_query("www.example.com", 1, 1)
 
 socket = UDPSocket.new
