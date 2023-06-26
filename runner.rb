@@ -9,7 +9,7 @@ r = Response.new
 
 url = ARGV[0]
 
-puts "Fetching ip address for #{url}"
+puts "Fetching ip address for #{url}, BOI!!!!!"
 
 query = q.build_query("www.example.com", 1, 1)
 
