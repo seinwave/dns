@@ -74,7 +74,8 @@ class Response
     return DNSRecord.new(name, type_, class_, ttl, data)
   end
 
-  def parse_dns_packet(reader)
+  def parse_dns_packet(data)
+    reader = StringIO.new(data)
     header = parse_header(reader)
     
     questions = []
