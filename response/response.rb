@@ -22,7 +22,7 @@ class Response
 
  
  def decode_name(reader)
-    name = [] 
+    name = []
     loop do
       length = reader.read(1).unpack("C")[0]
       if (length & 0xC0) == 0xC0 # checking if most significant bits are 11 - means we have a compressed name (ie - a reference to the position of the name in the bytestream)
@@ -33,7 +33,7 @@ class Response
         name.push(reader.read(length))
       end 
     end
-    
+
     return name.join(".")
   end
 
@@ -103,12 +103,13 @@ class Response
 
   end
 
-  def get_ip_address(packet)
-    raw_data = packet.answers[0].data
-    ip_address = raw_data.unpack("C4")
+  def get_raw_data(packet)
+    return packet.answers[0].data
+  end 
 
+  def get_ip_address(data)
+    ip_address = data.unpack("C4")
     ip_string = ip_address.join(".")
-  
     return ip_string
   end
 
