@@ -7,11 +7,12 @@ require 'pry'
 q = Query.new
 r = Response.new 
 
-url = ARGV[0]
+puts "Enter a url: "
+url = gets.chomp
 
-puts "Fetching ip address for #{url}"
+puts "Fetching ip address for #{url}..."
 
-query = q.build_query("www.example.com", 1, 1)
+query = q.build_query(url, 1, 1)
 
 socket = UDPSocket.new
 
@@ -22,10 +23,12 @@ socket.send(query, 0, dns_server_ip, port)
 
 response, _ = socket.recvfrom(1024)
 
-reader = StringIO.new(response)
+packet = r.parse_dns_packet(response)
 
-packet = r.parse_dns_packet(reader)
+ip_address = r.get_ip_address(packet)
 
-puts r.get_ip_address(packet)
+system "echo #{ip_address} | pbcopy"
+
+puts "IP address copied to clipboard: #{ip_address}"
 
 socket.close
