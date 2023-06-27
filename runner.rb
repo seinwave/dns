@@ -25,7 +25,9 @@ response, _ = socket.recvfrom(1024)
 
 packet = r.parse_dns_packet(response)
 
-ip_address = r.get_ip_address(packet)
+response_data = packet.answers[0].data
+
+ip_address = r.get_ip_address(response_data)
 
 system "echo #{ip_address} | pbcopy"
 
