@@ -12,7 +12,10 @@ describe Resolver do
         @response = Response.new
         @raw_type_a_response = "\x13\x14\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xC0\f\x00#{TYPE_A}\x00\x01\x00\x00P[\x00\x04]\xB8\xD8\"" 
         @raw_type_ns_response = "\x13\x14\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xC0\f\x00#{TYPE_NS}\x00\x01\x00\x00P[\x00\x04]\xB8\xD8\"" 
-    end 
+    
+        @array_of_records = [DNSRecord.new("www.typea.com", 1, 1, 20571, "]\xB8\xD8\""),DNSRecord.new("www.example.com", 1, 2, 20571, "]\xB8\xD8\""),DNSRecord.new("www.example.com", 1, 2, 20571, "]\xB8\xD8\"")]
+    
+      end 
  
     it "should build a valid DNS query" do
         # mock the random id
@@ -69,6 +72,11 @@ describe Resolver do
 
         expect(parsed_packet).to eq(correct_packet)
        
+    end
+
+    it "should digest an array of answers, and return the first type A" do
+      data = @r.get_answer(@array_of_records)
+      expect(data.name).to eq("www.typea.com")
     end
     
 end  
