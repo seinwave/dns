@@ -92,6 +92,12 @@ class Resolver
     return DNSRecord.new(name, type_, class_, ttl, data)
   end
 
+  def get_answer(packet)
+    packet.answers.each do |answer|
+      return answer if answer.type_ == 1
+    end 
+  end
+
   def parse_dns_packet(response)
     reader = StringIO.new(response)
     header = @response.parse_header(reader)
