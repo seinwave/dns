@@ -16,7 +16,7 @@ query = q.build_query(url, 1, 1)
 
 socket = UDPSocket.new
 
-dns_server_ip = "8.8.8.8"
+dns_server_ip = "8.8.8.8" # start with google's dns server
 port = 53
 
 socket.send(query, 0, dns_server_ip, port)
