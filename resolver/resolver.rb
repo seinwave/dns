@@ -98,6 +98,12 @@ class Resolver
     end 
   end
 
+  def get_nameserver_ip(packet)
+    packet.additionals.each do |additional|
+      return additional if additional.type_ == 1
+    end 
+  end 
+
   def parse_dns_packet(response)
     reader = StringIO.new(response)
     header = @response.parse_header(reader)
