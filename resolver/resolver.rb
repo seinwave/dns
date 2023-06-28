@@ -92,4 +92,32 @@ class Resolver
     return DNSRecord.new(name, type_, class_, ttl, data)
   end
 
+  def parse_dns_packet(response)
+    reader = StringIO.new(response)
+    header = @response.parse_header(reader)
+
+    questions = []
+    answers = []
+    authorities = []
+    additionals = []
+
+    header.num_questions.times do
+      questions << @response.parse_question(reader)
+    end 
+
+    header.num_answers.times do
+      answers << parse_record(reader)
+    end
+
+    header.num_authorities.times do
+      authorities << parse_record(reader)
+    end
+
+    header.num_additionals.times do
+      additionals << parse_record(reader)
+    end 
+
+    return DNSPacket.new(header, questions, answers, authorities, additionals)
+  end
+
 end 
