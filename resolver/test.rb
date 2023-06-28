@@ -14,7 +14,7 @@ describe Resolver do
         @raw_type_ns_response = "\x13\x14\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\aexample\x03com\x00\x00\x01\x00\x01\xC0\f\x00#{TYPE_NS}\x00\x01\x00\x00P[\x00\x04]\xB8\xD8\"" 
     
         @array_of_records = [DNSRecord.new("www.typea.com", 1, 1, 20571, "]\xB8\xD8\""),DNSRecord.new("www.example.com", 1, 2, 20571, "]\xB8\xD8\""),DNSRecord.new("www.example.com", 1, 2, 20571, "]\xB8\xD8\"")]
-    
+        @packet_with_records = DNSPacket.new(DNSHeader.new(4884,32896,1,1,0),[],@array_of_records,@array_of_records,[])
       end 
  
     it "should build a valid DNS query" do
@@ -75,7 +75,7 @@ describe Resolver do
     end
 
     it "should digest an array of answers, and return the first type A" do
-      data = @r.get_answer(@array_of_records)
+      data = @r.get_answer(@packet_with_records)
       expect(data.name).to eq("www.typea.com")
     end
     
