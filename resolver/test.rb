@@ -59,5 +59,17 @@ describe Resolver do
       encoded_name = "www.example.com".force_encoding("ASCII-8BIT")
       expect(record.data).to eq(encoded_name) 
     end
+
+     it "parses the response, and returns a complete DNSPacket" do
+        parsed_packet = @response.parse_dns_packet(@raw_response)
+
+        correct_header = DNSHeader.new(4884,33152,1,1,0)
+        correct_record = DNSRecord.new("www.example.com", 1, 1, 20571, "]\xB8\xD8\"")
+        correct_packet = DNSPacket.new(correct_header, [DNSQuestion.new("www.example.com", 1, 1)], [correct_record],[],[])
+        correct_packet.answers[0].data.force_encoding("ASCII-8BIT") # need to force encoding because I copy + pasted the string from the raw response
+
+        expect(parsed_packet).to eq(correct_packet)
+       
+    end
     
 end  
