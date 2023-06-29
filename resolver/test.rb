@@ -83,5 +83,12 @@ describe Resolver do
       data = @r.get_nameserver_ip(@packet_with_records)
       expect(data.name).to eq("www.typea.com")
     end
+
+    it 'should handle an open-ended ip request, and return a complete DNSPacket' do
+      TYPE_A_INTEGER = 1
+      result = send_query("8.8.8.8", "example.com", TYPE_A_INTEGER, 1)
+
+      expect(result.answers[0].name).to eq("example.com")
+    end 
     
 end  
