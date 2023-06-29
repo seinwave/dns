@@ -31,7 +31,7 @@ describe Resolver do
        packet_ttl = packet.answers[0].ttl
 
        correct_header = DNSHeader.new(4884,32896,1,1,0)
-       correct_record = DNSRecord.new("www.example.com", 1, 1, packet_ttl, "]\xB8\xD8\"")
+       correct_record = DNSRecord.new("www.example.com", 1, 1, packet_ttl, "93.184.216.34")
        correct_packet = DNSPacket.new(correct_header, [DNSQuestion.new("www.example.com", 1, 1)], [correct_record],[],[])
        correct_packet.answers[0].data.force_encoding("ASCII-8BIT") # need to force encoding because I copy + pasted the string from the raw response
 
@@ -84,11 +84,14 @@ describe Resolver do
       expect(data.name).to eq("www.typea.com")
     end
 
-    it 'should handle an open-ended ip request, and return a complete DNSPacket' do
-      TYPE_A_INTEGER = 1
-      result = send_query("8.8.8.8", "example.com", TYPE_A_INTEGER, 1)
+    it 'should handle a TXT type request, and return a correct DNS packet' do
+      TYPE_TXT_INTEGER = 16
+      INTERNET_CLASS = 1
+      result = @r.send_query("8.8.8.8", "example.com", TYPE_TXT_INTEGER, INTERNET_CLASS)
 
-      expect(result.answers[0].name).to eq("example.com")
+      puts result.inspect 
+     
+      expect(result.header.num_answers).to eq(2)
     end 
     
 end  

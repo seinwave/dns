@@ -35,7 +35,7 @@ class Resolver
     socket.send(query, 0, ip_address, 53)
     response, _ = socket.recvfrom(1024)
 
-    return @response.parse_dns_packet(response)
+    return parse_dns_packet(response)
   end 
 
    def decode_name(reader)
@@ -131,5 +131,6 @@ class Resolver
 
     return DNSPacket.new(header, questions, answers, authorities, additionals)
   end
+
 
 end 
