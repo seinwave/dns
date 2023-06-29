@@ -38,18 +38,21 @@ class Resolver
     return parse_dns_packet(response)
   end 
 
-   def decode_name(reader)
+  def decode_name(reader)
     name = []
     loop do
       length = reader.read(1).unpack("C")[0]
       if (length & 0xC0) == 0xC0 # checking if most significant bits are 11 - means we have a compressed name (ie - a reference to the position of the name in the bytestream)
         name.push(decode_compressed_name(length, reader))
         return name.join(".")
+      elsif length == 0
+        return name.join(".") 
       else 
-        return name.join(".") if length == 0
         name.push(reader.read(length))
       end 
     end
+
+    return name.join(".")
 
   end
 
@@ -67,6 +70,8 @@ class Resolver
   end
 
   def parse_record(reader)
+    return if reader.nil?
+
     type_a = 1
     type_ns = 2
 
@@ -82,14 +87,17 @@ class Resolver
     data_length = data_length_bytes.unpack("n")[0] # tells us how many bytes of data to consume
 
     if type_ == type_ns 
-      data = name
+      data = decode_name(reader)
     elsif type_ == type_a
       data = @response.get_ip_address(reader.read(data_length)) 
     else 
       data = reader.read(data_length)
     end
 
-    return DNSRecord.new(name, type_, class_, ttl, data)
+    record = DNSRecord.new(name, type_, class_, ttl, data)
+
+    puts record
+    return record
   end
 
   def get_answer(packet)
@@ -118,15 +126,18 @@ class Resolver
     end 
 
     header.num_answers.times do
-      answers << parse_record(reader)
+      answer = parse_record(reader)
+      answers << answer
     end
 
     header.num_authorities.times do
-      authorities << parse_record(reader)
+      authority = parse_record(reader)
+      authorities << authority
     end
 
     header.num_additionals.times do
-      additionals << parse_record(reader)
+      additional = parse_record(additional)
+      additionals << additional
     end 
 
     return DNSPacket.new(header, questions, answers, authorities, additionals)
