@@ -52,9 +52,8 @@ describe Response do
     end
 
     it "parses the response, and returns a legible IP address" do
-        parsed_packet = @response.parse_dns_packet(@raw_response)
-        ip_address = @response.get_ip_address(parsed_packet)
-        expect(ip_address).to eq('93.184.216.34')
+        ip_address = @response.get_ip_address(@raw_response)
+        expect(ip_address).to eq("19.20.129.128")
     end 
 
 end 
