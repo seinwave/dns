@@ -16,6 +16,8 @@ puts "Fetching ip address for #{url}..."
 
 final_ip = @resolver.resolve(url,1)
 
+puts 'Found it!'
+
 system "echo #{final_ip} | pbcopy"
 
 puts "IP address copied to clipboard: #{final_ip}"
