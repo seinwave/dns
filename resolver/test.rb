@@ -81,12 +81,12 @@ describe Resolver do
     it "should digest packet, and return the first type A answer" do
      
       data = @r.get_answer(packet_with_records)
-      expect(data.name).to eq("www.typea.com")
+      expect(data).to eq("]\xB8\xD8\"")
     end
 
     it "should digest a packet, and return the first type A additional" do
       data = @r.get_nameserver_ip(packet_with_records)
-      expect(data.name).to eq("www.typea.com")
+      expect(data).to eq("]\xB8\xD8\"")
     end
 
     it 'should handle a TXT type request, and return a correct DNS packet' do
