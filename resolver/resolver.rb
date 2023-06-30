@@ -70,7 +70,9 @@ class Resolver
   end
 
   def parse_record(reader)
-    return if reader.nil?
+    if reader.nil?
+      return 
+    end
 
     type_a = 1
     type_ns = 2
@@ -95,20 +97,24 @@ class Resolver
     end
 
     record = DNSRecord.new(name, type_, class_, ttl, data)
-
-    puts record
     return record
   end
 
   def get_answer(packet)
     packet.answers.each do |answer|
-      return answer if answer.type_ == 1
+      return answer.data if answer.type_ == 1
     end 
   end
 
   def get_nameserver_ip(packet)
     packet.additionals.each do |additional|
-      return additional if additional.type_ == 1
+      return additional.data if additional.type_ == 1
+    end 
+  end
+
+  def get_nameserver(packet)
+    packet.authorities.each do |authority|
+      return authority.data if authority.type_ == 2
     end 
   end 
 
@@ -136,12 +142,32 @@ class Resolver
     end
 
     header.num_additionals.times do
-      additional = parse_record(additional)
+      additional = parse_record(reader)
       additionals << additional
     end 
 
     return DNSPacket.new(header, questions, answers, authorities, additionals)
   end
+
+  def resolve(domain_name, record_type)
+  nameserver = "198.41.0.4"
+  
+  loop do
+    puts "Querying #{nameserver} for #{domain_name}"
+    response = send_query(nameserver, domain_name, record_type, 1)
+    
+    if (ip = get_answer(response)) && !ip.empty?
+      return ip
+    elsif (ns_ip = get_nameserver_ip(response)) && !ns_ip.empty?
+      nameserver = ns_ip
+    elsif (ns_domain = get_nameserver(response)) && !ns_domain.empty?
+      nameserver = resolve(ns_domain, 1)
+    else
+      raise "Something went wrong"
+    end
+  end
+end
+
 
 
 end 

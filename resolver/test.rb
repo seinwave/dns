@@ -97,6 +97,7 @@ describe Resolver do
     it 'should fail to find an answer from a root nameserver' do
       result = @r.send_query("198.41.0.4", "google.com", TYPE_A_INT,CLASS_INTERNET_INT)
       expect(result.header.num_answers).to eq(0)
-    end 
+    end
+    
     
 end  
