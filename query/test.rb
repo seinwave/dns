@@ -4,18 +4,17 @@ require_relative 'query'
 describe Query do
     it "should convert a header to bytes" do
         query = Query.new
-        header = DNSHeader.new(id:1, flags:1)
+        header = DNSHeader.new(1, 1)
         expect(query.header_to_bytes(header)).to eq("\x00\x01\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00")
     end
 
     it  "should convert a question to bytes" do
         query = Query.new
-        question = DNSQuestion.new(name: "www.google.com", type_: 1, class_: 1)
+        question = DNSQuestion.new("www.google.com", 1, 1)
         expect(query.question_to_bytes(question)).to eq("www.google.com\u0000\u0001\u0000\u0001")
-       
     end
 
-    it "should encode a reasonable-length domain name" do
+    it "should encode a domain name" do
         query = Query.new
         expect(query.encode_dns_name("www.google.com")).to eq("\u0003www\u0006google\u0003com\u0000")
     end

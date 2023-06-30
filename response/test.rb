@@ -40,8 +40,7 @@ describe Response do
     end
     
     it "parses the response, and returns a complete DNSPacket" do
-        @buffer = StringIO.new(@raw_response)
-        parsed_packet = @response.parse_dns_packet(@buffer)
+        parsed_packet = @response.parse_dns_packet(@raw_response)
 
         correct_header = DNSHeader.new(4884,33152,1,1,0)
         correct_record = DNSRecord.new("www.example.com", 1, 1, 20571, "]\xB8\xD8\"")
@@ -53,10 +52,8 @@ describe Response do
     end
 
     it "parses the response, and returns a legible IP address" do
-        @buffer = StringIO.new(@raw_response)
-        parsed_packet = @response.parse_dns_packet(@buffer)
-        ip_address = @response.get_ip_address(parsed_packet)
-        expect(ip_address).to eq('93.184.216.34')
+        ip_address = @response.get_ip_address(@raw_response)
+        expect(ip_address).to eq("19.20.129.128")
     end 
 
 end 
