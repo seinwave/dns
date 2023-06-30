@@ -14,10 +14,9 @@ url = gets.chomp
 
 puts "Fetching ip address for #{url}..."
 
-@resolver.resolve(url,1)
+final_ip = @resolver.resolve(url,1)
 
-# system "echo #{ip_address} | pbcopy"
+system "echo #{final_ip} | pbcopy"
 
-# puts "IP address copied to clipboard: #{ip_address}"
+puts "IP address copied to clipboard: #{final_ip}"
 
-# socket.close
